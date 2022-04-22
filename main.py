@@ -11,12 +11,18 @@ from tensorflow.python.keras.models import Model, load_model
 from tensorflow.python.keras.layers import Input
 from tensorflow.python.keras.callbacks import Callback 
 from pydantic import BaseModel
-from fastapi.encoders import jsonable_encoder
+# from fastapi.encoders import jsonable_encoder
+from uvicorn.config import LOGGING_CONFIG
 
-class ModelOutput(Callback):
-    def on_predict_end(self, logs=None):
-        keys = list(logs.keys())
-        return keys
+log_config = LOGGING_CONFIG
+log_config["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+
+
+# class ModelOutput(Callback):
+#     def on_predict_end(self, logs=None):
+#         keys = list(logs.keys())
+#         print(keys)
 
 
 model_name = 'bert-base-uncased'
@@ -55,8 +61,9 @@ async def makePrediction(text):
     if text == "":
         return {"message": "No text provided"}
     tokenizedValues = tokenization(text)
-    results = new_model.predict_on_batch(tokenizedValues,batch_size=32, callbacks=[ModelOutput()]) #predict
-    return results
+    result = new_model.predict(tokenizedValues,batch_size=32)
+    print(result)
+    return result
 
 
 origins = ["*"]
@@ -75,19 +82,18 @@ app.add_middleware(
 class UserInput(BaseModel):
     comment: str
 
+class Response(BaseModel):
+    response: dict
 
 @app.post("/predict/")
 async def root(comment:UserInput):
-    text = [UserInput.comment]
-    results = makePrediction.predict_on_batch(text) #predict
+    #text = [UserInput.comment]
+    #results = makePrediction.predict(text)
 
-    return {"prediction": str(results)}
-    # print(comment)
-    # response = makePrediction(comment.comment)
-    # print(response)
-    # update_item_encoded = jsonable_encoder(123)
-    # newRes = Item(comment=update_item_encoded)
-    #return update_item_encoded
+    #return {"prediction": str(results)}
+     response = await makePrediction(comment.comment)
+    
+     return response
 
 @app.get("/")
 async def root():
@@ -96,7 +102,7 @@ async def root():
     
 if __name__  == "__main__":
 	port = int(os.environ.get('PORT', 5000))
-	run(app, host="0.0.0.0", port=port)
+	run(app, host="0.0.0.0", port=port,log_config=log_config)
 
 
 # to run 
