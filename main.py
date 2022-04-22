@@ -62,7 +62,9 @@ async def makePrediction(text):
         return {"message": "No text provided"}
     tokenizedValues = tokenization(text)
     results = new_model.predict(tokenizedValues,batch_size=32) #predict
-    return results[0].tolist()
+    labels=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
+    class_labels=[labels[i] for i,prob in enumerate(results[0]) if prob >= 0.85 ]
+    return class_labels
 
 
 origins = ["*"]
@@ -82,14 +84,14 @@ class UserInput(BaseModel):
     comment: str
 
 class Response(BaseModel):
-    response: List[float] = None
+    result: List[str] = None
 
 
 @app.post("/predict/",response_model=Response)
 async def root(comment:UserInput):
     text = [comment.comment]
     results = await makePrediction(text) #predict
-    res = Response(response = results)
+    res = Response(result = results)
     return res
 
 @app.get("/")
