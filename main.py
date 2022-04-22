@@ -85,7 +85,7 @@ class Response(BaseModel):
     response: List[float] = None
 
 
-@app.post("/predict/")
+@app.post("/predict/",response_model=Response)
 async def root(comment:UserInput):
     text = [comment.comment]
     results = await makePrediction(text) #predict
