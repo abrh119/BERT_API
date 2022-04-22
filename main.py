@@ -62,7 +62,7 @@ async def makePrediction(text):
         return {"message": "No text provided"}
     tokenizedValues = tokenization(text)
     results = new_model.predict(tokenizedValues,batch_size=32) #predict
-    return results
+    return results[0].tolist()
 
 
 origins = ["*"]
@@ -82,23 +82,15 @@ class UserInput(BaseModel):
     comment: str
 
 class Response(BaseModel):
-    response: list=[]
+    response: List[float] = None
 
 
-@app.post("/predict/",response_model=Response)
+@app.post("/predict/")
 async def root(comment:UserInput):
-    print(comment.comment)
     text = [comment.comment]
     results = await makePrediction(text) #predict
-    print(results)
-
-    return Response(response=results)
-    # print(comment)
-    # response = makePrediction(comment.comment)
-    # print(response)
-    # update_item_encoded = jsonable_encoder(123)
-    # newRes = Item(comment=update_item_encoded)
-    #return update_item_encoded
+    res = Response(response = results)
+    return res
 
 @app.get("/")
 async def root():
