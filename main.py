@@ -3,6 +3,7 @@ from urllib import response
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
+from uvicorn.config import LOGGING_CONFIG
 import os
 import transformers
 from transformers import TFBertModel,  BertConfig, BertTokenizerFast, TFAutoModel
@@ -12,11 +13,16 @@ from tensorflow.python.keras.layers import Input
 from tensorflow.python.keras.callbacks import Callback 
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
+from typing import List
 
-class ModelOutput(Callback):
-    def on_predict_end(self, logs=None):
-        keys = list(logs.keys())
-        return keys
+
+log_config = LOGGING_CONFIG
+log_config["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+# class ModelOutput(Callback):
+#     def on_predict_end(self, logs=None):
+#         keys = list(logs.keys())
+#         print(keys)
 
 
 model_name = 'bert-base-uncased'
@@ -55,7 +61,7 @@ async def makePrediction(text):
     if text == "":
         return {"message": "No text provided"}
     tokenizedValues = tokenization(text)
-    results = new_model.predict_on_batch(tokenizedValues,batch_size=32, callbacks=[ModelOutput()]) #predict
+    results = new_model.predict(tokenizedValues,batch_size=32) #predict
     return results
 
 
@@ -75,13 +81,18 @@ app.add_middleware(
 class UserInput(BaseModel):
     comment: str
 
+class Response(BaseModel):
+    response: list=[]
 
-@app.post("/predict/")
+
+@app.post("/predict/",response_model=Response)
 async def root(comment:UserInput):
-    text = [UserInput.comment]
-    results = makePrediction.predict_on_batch(text) #predict
+    print(comment.comment)
+    text = [comment.comment]
+    results = await makePrediction(text) #predict
+    print(results)
 
-    return {"prediction": str(results)}
+    return Response(response=results)
     # print(comment)
     # response = makePrediction(comment.comment)
     # print(response)
@@ -96,7 +107,7 @@ async def root():
     
 if __name__  == "__main__":
 	port = int(os.environ.get('PORT', 5000))
-	run(app, host="0.0.0.0", port=port)
+	run(app, host="0.0.0.0", port=port,log_config=log_config)
 
 
 # to run 
