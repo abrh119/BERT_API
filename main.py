@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from typing import List
 
-PORT = int(os.getenv("PORT", "World")) | 5000
+PORT = int(os.getenv("PORT", 5000))
 log_config = LOGGING_CONFIG
 log_config["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
 log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
