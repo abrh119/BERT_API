@@ -3,22 +3,18 @@ from urllib import response
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
-import os
-import transformers
-from transformers import TFBertModel,  BertConfig, BertTokenizerFast, TFAutoModel
-from tensorflow import keras
-from tensorflow.python.keras.models import Model, load_model
-from tensorflow.python.keras.layers import Input
-from tensorflow.python.keras.callbacks import Callback 
-from pydantic import BaseModel
-# from fastapi.encoders import jsonable_encoder
 from uvicorn.config import LOGGING_CONFIG
+import os
+from transformers import BertConfig, BertTokenizerFast, TFAutoModel
+from tensorflow.python.keras.models import load_model
+from pydantic import BaseModel
 
+from typing import List
+
+PORT = int(os.getenv("PORT", 8080)) 
 log_config = LOGGING_CONFIG
 log_config["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
 log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
-
-
 # class ModelOutput(Callback):
 #     def on_predict_end(self, logs=None):
 #         keys = list(logs.keys())
@@ -38,8 +34,7 @@ bert = TFAutoModel.from_pretrained(model_name)
 
 
 app = FastAPI()
-model_path = './Bert_Dcnn_model/'
-new_model = load_model(model_path)
+new_model = load_model(os.path.abspath("./"))
 
 
 def tokenization (input):
@@ -61,9 +56,10 @@ async def makePrediction(text):
     if text == "":
         return {"message": "No text provided"}
     tokenizedValues = tokenization(text)
-    result = new_model.predict(tokenizedValues,batch_size=32)
-    print(result)
-    return result
+    results = new_model.predict(tokenizedValues,batch_size=32) #predict
+    labels=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
+    class_labels=[labels[i] for i,prob in enumerate(results[0]) if prob >= 0.85 ]
+    return class_labels
 
 
 origins = ["*"]
@@ -83,17 +79,15 @@ class UserInput(BaseModel):
     comment: str
 
 class Response(BaseModel):
-    response: dict
+    result: List[str] = None
 
-@app.post("/predict/")
+
+@app.post("/predict/",response_model=Response)
 async def root(comment:UserInput):
-    #text = [UserInput.comment]
-    #results = makePrediction.predict(text)
-
-    #return {"prediction": str(results)}
-     response = await makePrediction(comment.comment)
-    
-     return response
+    text = [comment.comment]
+    results = await makePrediction(text) #predict
+    res = Response(result = results)
+    return res
 
 @app.get("/")
 async def root():
@@ -101,9 +95,11 @@ async def root():
 
     
 if __name__  == "__main__":
-	port = int(os.environ.get('PORT', 5000))
-	run(app, host="0.0.0.0", port=port,log_config=log_config)
+	run(app, host="0.0.0.0", port=PORT,log_config=log_config)
 
 
 # to run 
 # python -m uvicorn main:app --reload
+
+# docker image build -t <app-name> .
+# docker run -p 5000:5000 -d <app-name>
