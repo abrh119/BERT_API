@@ -1,7 +1,7 @@
 FROM python:3.9
 # install python in the container
 
-EXPOSE 5000 
+EXPOSE 8080 
 # Expose the port 8000 in which our application runs
 
 WORKDIR /app 
@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -U pip
 COPY ./requirements.txt .
 # Copy requirements from host, to docker container in /app 
 
-COPY ./project .
+COPY . /app/
 # Copy everything from ./project directory to /app in the container 
 
 # Install the dependencies
@@ -21,3 +21,9 @@ RUN pip install -r requirements.txt
 
 # execute the command python main.py (in the WORKDIR) to start the app
 CMD ["python", "main.py"]
+
+
+
+
+
+

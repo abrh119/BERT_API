@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from typing import List
 
-PORT = int(os.getenv("PORT", 5000))
+PORT = int(os.getenv("PORT", 8080)) 
 log_config = LOGGING_CONFIG
 log_config["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
 log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
@@ -34,8 +34,7 @@ bert = TFAutoModel.from_pretrained(model_name)
 
 
 app = FastAPI()
-model_path = './Bert_Dcnn_model/'
-new_model = load_model(model_path)
+new_model = load_model(os.path.abspath("./"))
 
 
 def tokenization (input):
