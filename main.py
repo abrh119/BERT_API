@@ -9,7 +9,7 @@ from transformers import BertConfig, BertTokenizerFast, TFAutoModel
 from tensorflow.python.keras.models import load_model
 from pydantic import BaseModel
 
-from typing import List
+from typing import Dict
 
 PORT = int(os.getenv("PORT", 8080)) 
 log_config = LOGGING_CONFIG
@@ -58,8 +58,9 @@ async def makePrediction(text):
     tokenizedValues = tokenization(text)
     results = new_model.predict(tokenizedValues,batch_size=32) #predict
     labels=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
-    class_labels=[labels[i] for i,prob in enumerate(results[0]) if prob >= 0.85 ]
-    return class_labels
+    items_dict = {key:value for key, value in zip(labels, results[0]*100)}
+  
+    return items_dict
 
 
 origins = ["*"]
@@ -79,7 +80,7 @@ class UserInput(BaseModel):
     comment: str
 
 class Response(BaseModel):
-    result: List[str] = None
+    result: Dict[str, float] = None
 
 
 @app.post("/predict/",response_model=Response)

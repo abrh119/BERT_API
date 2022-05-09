@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -U pip
 COPY ./requirements.txt .
 # Copy requirements from host, to docker container in /app 
 
-COPY . /app/
+COPY . .
 # Copy everything from ./project directory to /app in the container 
 
 # Install the dependencies
