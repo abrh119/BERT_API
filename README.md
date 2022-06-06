@@ -19,6 +19,7 @@ This model is integrated in a Social Media Web app to detect toxic comments, als
 
 #### Social Media Web app:
 #### Web app Admin Panel: 
+#### Use your mongodb username and pass in db.py
 
 ### Testing
 <img width="368" alt="Capture" src="https://user-images.githubusercontent.com/59731843/172159740-a2b3ea68-db88-4ff5-8acd-ddfa4f839551.PNG">
