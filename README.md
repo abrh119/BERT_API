@@ -1,12 +1,27 @@
 # BERT_API
-The prediction clasess are 
+
+### Dataset: https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge
+
+The proposed idea is to build an AI model that can detect toxic content such as hate speech. This AI model will be created with using BERT capable of detecting hate speech or similar text by phrasal interpretation rather than word-by-word interpretation or even slang terms, the main target is to detect hate speech based off the contexual meaning of the input rather than a word by word detection. 
+
+The end product of the proposing solution will be a well-trained AI neural network model that will be capable of detecting the above-mentioned text. It will be possible to embed this model into a platform or any other software and extend its functionality as REST api using FASTAPI
+
+
+
+### The prediction clasess are 
 ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
 
 <img width="948" alt="Capture" src="https://user-images.githubusercontent.com/59731843/164798967-6923ad1d-5169-4bc1-92c0-1d3edc750d1f.PNG">
 
-In order to run, clone it, and run yeah don't even think about it
-GG
+In order to run, Clone the repo, run the databook along with the dataset, save model, and type in "pip install -r requirements" and finally run python -m uvicorn main:app --reload
 
+This model is integrated in a Social Media Web app to detect toxic comments, also the the user inputs are saved in a database in db.py in a mongoDB database so that the user input can be used for further training as a dataset.
+
+#### Social Media Web app:
+#### Web app Admin Panel: 
+
+### Testing
+<img width="368" alt="Capture" src="https://user-images.githubusercontent.com/59731843/172159740-a2b3ea68-db88-4ff5-8acd-ddfa4f839551.PNG">
 
 
 # Indepth Summary
