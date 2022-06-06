@@ -1,5 +1,4 @@
 # BERT_API
-All classes and labels done for prediction,
 The prediction clasess are 
 ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
 
@@ -7,3 +6,33 @@ The prediction clasess are
 
 In order to run, clone it, and run yeah don't even think about it
 GG
+
+
+
+# Indepth Summary
+A hate speech detection model based off BERT
+What is BERt? 
+BERT is a transformers model pretrained on a large corpus of English data in a self-supervised fashion developed by google. 
+
+This means it was pretrained on the raw texts only, with no humans labelling because BERT is designed to help computers understand the meaning of ambiguous language in text by using surrounding text to establish context which is perfect for our project
+
+There are 4 main variations of the BERT Model as follows, and in our case we are going with BERT BASE UNCASED
+BERT-Base, Uncased: 12-layer, 768-hidden, 12-heads, 110M parameters
+So why Uncased? Because uncased comes with accent markers meaning marks over letters can be removed.
+
+With the initially 12 layers of BERT, and each of these 12 layers contains its own encoder and decoder with their own layer weights, 
+In Explain in simple forms this is how BERT works, in our case for this model I have customized in a way that there are 4 other layers added to it, so in total there's 16 layers, with 12 default and 4 head classification
+
+In every one of these layers, there is a neural network defined, therefore in every neural network there are multiple nodes having their distinct weightings or values.
+
+And when an input is passed through a neural network then , operations are performed within the nodes and finally the dot product of the output of every node is the output of that layer
+
+So when the tokenized input is passed through the model, the text is passed through each layer, and output of each layer is then held at the end of each layer 
+
+And in the 16th layer we have 6 specified nodes with its own layer weights and each nodes weighting is equivalent to either one of those 6 labels that we have classified already 
+
+## For a simpler diagram based view
+
+![Viva Presentation (1)](https://user-images.githubusercontent.com/59731843/172158506-99671b30-1832-4925-8c89-2a4179a9f807.png)
+ 
+
