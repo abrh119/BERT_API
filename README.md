@@ -18,7 +18,7 @@ In order to run, Clone the repo, run the databook along with the dataset, save m
 This model is integrated in a Social Media Web app to detect toxic comments, also the the user inputs are saved in a database in db.py in a mongoDB database so that the user input can be used for further training as a dataset.
 
 #### Social Media Web app: https://github.com/abrh119/KamakNe_Social_Web_App/tree/master
-#### Web app Admin Panel: 
+#### Web app Admin Panel: https://github.com/abrh119/KamakNe_Detoxify_Admin_Panel/
 #### Use your mongodb username and pass in db.py
 
 ### Testing
