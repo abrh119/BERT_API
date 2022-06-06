@@ -4,7 +4,7 @@ from typing import Dict
 class Comment(BaseModel):
     comment: str = None
     labels: Dict[str, int] = None
-client = MongoClient('mongodb+srv://{user}:{clusterpass}@cluster0.z9i4w.mongodb.net/?retryWrites=true&w=majority')
+client = MongoClient('{MongoDBURL}')
 async def saveComment(text,predictions):
     db = client["detoxify"]
     msg_collection = db["comments"]
