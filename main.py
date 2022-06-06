@@ -1,4 +1,5 @@
 from gc import callbacks
+from db import saveComment
 from urllib import response
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -59,7 +60,7 @@ async def makePrediction(text):
     results = new_model.predict(tokenizedValues,batch_size=32) #predict
     labels=["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
     items_dict = {key:value for key, value in zip(labels, results[0]*100)}
-  
+    await saveComment(text[0], res.result)
     return items_dict
 
 
