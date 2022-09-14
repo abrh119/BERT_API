@@ -1,6 +1,9 @@
 # BERT_API
 
 ### Dataset: https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge
+#### Social Media Web app: https://github.com/abrh119/KamakNe_Social_Web_App/tree/master
+#### Web app Admin Panel: https://github.com/abrh119/KamakNe_Detoxify_Admin_Panel/
+
 
 The proposed idea is to build an AI model that can detect toxic content such as hate speech. This AI model will be created with using BERT capable of detecting hate speech or similar text by phrasal interpretation rather than word-by-word interpretation or even slang terms, the main target is to detect hate speech based off the contexual meaning of the input rather than a word by word detection. 
 
